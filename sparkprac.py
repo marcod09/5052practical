@@ -1,4 +1,5 @@
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import desc, asc 
 
 moviesPath = "../practical/ml-latest-small/movies.csv"
 ratingsPath = "../practical/ml-latest-small/ratings.csv"
@@ -18,11 +19,7 @@ for x in movies.take(1):
 ratings.printSchema()
 
 def nTopMovieRating(movies, ratings, n):
+    return movies.join(ratings, movies.movieId == ratings.movieId).select("rating", "title").orderBy(desc("rating")).limit(n).collect()
 
-    moviesToUse = ratings.groupBy("movieId") 
-   
-    nTopMovies = movies.join(moviesToUse, movies.movieId == moviesToUse.movieId).select("rating", "title").orderBy(col("rating").desc()).limit(n)
-
-    return nTopMovies
-
-nTopMovieRating(movies, ratings, 10)
+for x in nTopMovieRating(movies, ratings, 10):
+    print(x)
