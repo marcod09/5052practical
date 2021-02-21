@@ -20,7 +20,7 @@ ratings.printSchema()
 def nTopMovieRating(movies, ratings, n):
 
     moviesToUse = ratings.groupBy("movieId") 
-   # Within the filtered movies we query the 10 with a greatest average rating.
+   
     nTopMovies = movies.join(moviesToUse, movies.movieId == moviesToUse.movieId).select("rating", "title").orderBy(col("rating").desc()).limit(n)
 
     return nTopMovies
