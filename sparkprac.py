@@ -40,3 +40,9 @@ for x in nTopMovieRating(movies, ratings, 10):
 #printing out result of searchMovieByYear
 for x in searchMovieByYear(movies, "1992", 10):
     print(x)
+    
+def nTopMovieWatches(ratings): #https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/3328674740105987/4033840715400609/6441317451288404/latest.html
+     moviesDF = (ratings.groupBy('movieId').count()).orderBy(desc('count')).limit(10)
+     return movies.join(moviesDF, movies.movieId == moviesDF.movieId).select('title').collect()
+
+print(nTopMovieWatches(ratings))
