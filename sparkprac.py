@@ -26,9 +26,17 @@ ratings.printSchema()
 
 #returning top n movies by rating in descending order
 def nTopMovieRating(movies, ratings, n):
-    averageRatings = ratings.groupBy("movieID").agg(avg("rating"))
-    return movies.join(averageRatings, movies.movieId == ratings.movieId).select("avg(rating)", "title").orderBy(desc("avg(rating)")).limit(n).collect()
+    averageRatings = ratings.groupBy("movieId").agg(avg("rating"))
+    return movies.join(averageRatings, movies.movieId == averageRatings.movieId).select("avg(rating)", "title").orderBy(col("avg(rating)").desc()).limit(n).collect()
+
+#returns list of movies by user inputed year... limit it temp
+def searchMovieByYear(movies, year, limit):
+    return movies.filter(movies.title.contains(year)).limit(limit).collect()
 
 # printing out result of nTopMovie ratings
 for x in nTopMovieRating(movies, ratings, 10):
+    print(x)
+
+#printing out result of searchMovieByYear
+for x in searchMovieByYear(movies, "1992", 10):
     print(x)
