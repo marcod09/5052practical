@@ -29,9 +29,18 @@ def nTopMovieRating(movies, ratings, n):
     averageRatings = ratings.groupBy("movieId").agg(avg("rating"))
     return movies.join(averageRatings, movies.movieId == averageRatings.movieId).select("avg(rating)", "title").orderBy(col("avg(rating)").desc()).limit(n).collect()
 
+#returning top 10 movies
+def nTopMovieWatches(ratings):
+     moviesDF = (ratings.groupBy('movieId').count()).orderBy(desc('count')).limit(10)
+     return movies.join(moviesDF, movies.movieId == moviesDF.movieId).select('title').collect()
+
 #returns list of movies by user inputed year... limit it temp
 def searchMovieByYear(movies, year, limit):
     return movies.filter(movies.title.contains(year)).limit(limit).collect()
+
+#returns list of movies by user inputed genre... limit it temp
+def searchMovieByGenre(movies, genre, limit):
+    return movies.filter(movies.title.contains(genre)).limit(limit).collect()
 
 # printing out result of nTopMovie ratings
 for x in nTopMovieRating(movies, ratings, 10):
@@ -40,9 +49,10 @@ for x in nTopMovieRating(movies, ratings, 10):
 #printing out result of searchMovieByYear
 for x in searchMovieByYear(movies, "1992", 10):
     print(x)
-    
-def nTopMovieWatches(ratings): #https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/3328674740105987/4033840715400609/6441317451288404/latest.html
-     moviesDF = (ratings.groupBy('movieId').count()).orderBy(desc('count')).limit(10)
-     return movies.join(moviesDF, movies.movieId == moviesDF.movieId).select('title').collect()
 
+#printing out result of searchMovieByGenre
+for x in searchMovieByGenre(movies, "Comedy", 10):
+    print(x)
+
+#printing top10 movies
 print(nTopMovieWatches(ratings))
