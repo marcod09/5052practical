@@ -1,6 +1,6 @@
 import pyspark.sql.dataframe
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, count, avg, split, explode, first, max, desc, asc, countDistinct
+from pyspark.sql.functions import col, count, avg, split, explode, first, max, desc, asc, countDistinct, struct
 
 moviesPath = "../practical/ml-latest-small/movies.csv"
 ratingsPath = "../practical/ml-latest-small/ratings.csv"
@@ -49,6 +49,11 @@ def searchUserId(movies, ratings, userId):
     combined = noMovieWatched.alias('a').join(noGenreWatched.alias('b'), noMovieWatched.userId == noGenreWatched.userId).select("a.userId", "a.count(movieId)","b.count(genre)")
     return combined.filter(combined.userId.contains(userId)).collect()
 
+#returns a pandas series with result of favourite genre for a given user
+def findFavGenre(movies, ratings, userId):
+    countPerGenreWatched = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId).withColumn("genre",explode(split("genres","\|"))).drop("genres").groupBy("userId", "genre").count().groupBy("userId").pivot("genre").agg(max("count"))
+    countPandas = countPerGenreWatched.filter(countPerGenreWatched.userId.contains(userId)).toPandas()
+    return countPandas.drop("userId", 1).idxmax(axis=1)
 
 #====================TESTS===================
 # printing out result of nTopMovie ratings
@@ -66,4 +71,8 @@ for x in searchMovieByGenre(movies, "Comedy", 10):
 #printing top10 movies
 print(nTopMovieWatches(ratings))
 
+#printing result of serachUserId
 print(searchUserId(movies, ratings, 471))
+
+#printing result of findFavGenre given user Id ... here testing user 118
+print(findFavGenre(movies, ratings, "118")[0])
