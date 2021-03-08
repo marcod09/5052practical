@@ -99,14 +99,6 @@ print("---printing nTopWatchMovies---")
 for x in nTopMovieWatches(movies, ratings, 5):
     print(x)
 
-#printing Given a list of genres, search all movies belonging to each genre
-print("--printing Given a list of genres, search all movies belonging to each genre--")
-genreList = ['Horror', 'Comedy']
-length = len(genreList)
-for i in range(length):
-    for x in searchMovieByGenre(movies, genreList[i], 5):
-            print(x)
-
 #==========TESTS for Part 2========
 #printing result of findFavGenre given user Id ... here testing user 118
 print("---printing result of findFavGenre given user Id ... here testing user 118---")
