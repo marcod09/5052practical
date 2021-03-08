@@ -37,6 +37,13 @@ def searchUserId(movies, ratings, userId):
 def searchMovieByGenre(movies, genre, limit):
     return movies.filter(movies.title.contains(genre)).limit(limit).collect()
 
+#Given a list of genres, search all movies belonging to each genre
+def searchByMovieGenreList(movie, genreList, limit):
+    length = len(genreList)
+    for i in range(length):
+        for x in searchMovieByGenre(movies, genreList[i], 5):
+            print(x)
+
 #returns list of movies by user inputed year... limit it temp
 def searchMovieByYear(movies, year, limit):
     return movies.filter(movies.title.contains(year)).limit(limit).collect()
@@ -71,6 +78,11 @@ print(searchUserId(movies, ratings, 471))
 print("--printing out result of searchMovieByGenre--")
 for x in searchMovieByGenre(movies, "Comedy", 10):
     print(x)
+    
+#printing Given a list of genres, search all movies belonging to each genre
+print("--printing Given a list of genres, search all movies belonging to each genre--")
+genreList = ['Horror', 'Comedy']
+searchByMovieGenreList(movies, genreList, 10)
 
 #printing out result of searchMovieByYear
 print("---printing out result of searchMovieByYear---")
