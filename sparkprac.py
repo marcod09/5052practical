@@ -29,9 +29,9 @@ def nTopMovieRating(movies, ratings, n):
     averageRatings = ratings.groupBy("movieId").agg(avg("rating"))
     return movies.join(averageRatings, movies.movieId == averageRatings.movieId).select("avg(rating)", "title").orderBy(col("avg(rating)").desc()).limit(n).collect()
 
-#returning top 10 movies watched
-def nTopMovieWatches(ratings):
-     moviesDF = (ratings.groupBy('movieId').count()).orderBy(desc('count')).limit(10)
+#returning top n movies watched
+def nTopMovieWatches(movies, ratings, n):
+     moviesDF = (ratings.groupBy('movieId').count()).orderBy(desc('count')).limit(n)
      return movies.join(moviesDF, movies.movieId == moviesDF.movieId).select('title').collect()
 
 #returns list of movies by user inputed year... limit it temp
@@ -57,22 +57,37 @@ def findFavGenre(movies, ratings, userId):
 
 #====================TESTS===================
 # printing out result of nTopMovie ratings
+print("---printing out result of nTopMovie ratings---")
 for x in nTopMovieRating(movies, ratings, 10):
     print(x)
 
 #printing out result of searchMovieByYear
+print("---printing out result of searchMovieByYear---")
 for x in searchMovieByYear(movies, "1992", 10):
     print(x)
 
 #printing out result of searchMovieByGenre
+print("--printing out result of searchMovieByGenre--")
 for x in searchMovieByGenre(movies, "Comedy", 10):
     print(x)
 
-#printing top10 movies
-print(nTopMovieWatches(ratings))
+#printing Given a list of genres, search all movies belonging to each genre
+print("--printing Given a list of genres, search all movies belonging to each genre--")
+genreList = ['Horror', 'Comedy']
+length = len(genreList)
+for i in range(length):
+    for x in searchMovieByGenre(movies, genreList[i], 5):
+            print(x)
+
+#printing nTopWatchMovies
+print("---printing nTopWatchMovies---")
+for x in nTopMovieWatches(movies, ratings, 5):
+    print(x)
 
 #printing result of serachUserId
+print("---printing result of serachUserId---")
 print(searchUserId(movies, ratings, 471))
 
 #printing result of findFavGenre given user Id ... here testing user 118
+print("---printing result of findFavGenre given user Id ... here testing user 118---")
 print(findFavGenre(movies, ratings, "118")[0])
