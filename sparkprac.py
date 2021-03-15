@@ -31,6 +31,12 @@ def searchUserId(movies, ratings, userId):
     combined = noMovieWatched.alias('a').join(noGenreWatched.alias('b'), noMovieWatched.userId == noGenreWatched.userId).select("a.userId", "a.count(movieId)","b.count(genre)")
     return combined.filter(combined.userId.contains(userId)).collect()
 
+#returns list of movies + genre of movie for each user in a userlist
+def searchUserListMovies(movies, ratings, userList):
+    combinedTable = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId)
+    for x in userList:
+        print(combinedTable.filter(combinedTable.userId == x).select("b.userId", "title", "genres").show(1000, truncate = False))
+
 #TODO insert new method here
 
 #returns list of movies by user inputed genre... limit it temp
@@ -67,10 +73,14 @@ def findFavGenre(movies, ratings, userId):
 
 
 
-#====================Part 1 TESTS===================
+# ====================Part 1 TESTS===================
 #printing result of searchUserId
 print("---printing result of searchUserId---")
 print(searchUserId(movies, ratings, 471))
+
+#printing list of movies given a list of users
+userList = ["1", "2", "3"]
+searchUserListMovies(movies, ratings, userList)
 
 #TODO insert new method test here
 
