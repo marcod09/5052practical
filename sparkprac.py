@@ -37,7 +37,23 @@ def searchUserListMovies(userList):
     for x in userList:
         print(combinedTable.filter(combinedTable.userId == x).select("b.userId", "title", "genres").show(1000, truncate = False))
 
-#TODO insert new method here
+#Search movie by title, show the average rating, the number of users that have
+#watched the movie
+def searchMovieByTitle(movieTitle):
+    #join tables together
+    combined = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId).select("title", "a.movieId", "userId", "rating").limit(5).collect()
+    return combined
+    
+#Search movie by id, show the average rating, the number of users that have watched the movie
+def searchMovieById(movieID):
+    #show number of users that have watched that movie
+    noMovieWatched = ratings.groupBy("movieId").agg(count("userId"))
+    specificMovieWatched = noMovieWatched.movieId.contains(movieID)
+    #show average rating of movies
+    avgRatingMovies = ratings.groupBy("movieId").agg(avg("rating"))
+    specificMovieRating = avgRatingMovies.movieId.contains(movieID)
+    return specificMovieRating
+
 
 #returns list of movies by user inputed genre... limit it temp
 def searchMovieByGenre(genre, limit):
