@@ -34,8 +34,10 @@ def main():
             userInput = input("Enter 1 or 2\n")
             if(userInput == "1"):
                 print("sdfsdf")
+                print(sparkprac.searchMovieById(1))
             elif(userInput == "2"):
                 print("sasdasd")
+                print(sparkprac.searchMovieByTitle("Wolf"))
         elif(userInput == "4"):
             print("Enter 1 if you're inputting a genre")
             print("Enter 2 if you're inputting a list of genres")
