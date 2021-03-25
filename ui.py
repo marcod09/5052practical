@@ -19,7 +19,7 @@ def printMenu():
 def main():
     while (True):
         printMenu()
-        userInput = input("Enter a number from 1-8 that matches the option you want to explore in the menu shown above\n")
+        userInput = input("Enter a number from 1-9 that matches the option you want to explore in the menu shown above\n")
 
         if(userInput == "1"):
             userInput = input("Please enter the user ID you want to search\n")
@@ -62,7 +62,15 @@ def main():
             userInput = input("Please enter user id\n")
             print("User: " + userInput + " likes " + sparkprac.findFavGenre(userInput)[0] + " movies")
         elif(userInput == "9"):
-            pass
+            comparableList = []
+            userInput = input("Please enter user id 1\n")
+            a = "User: " + userInput + " likes " + sparkprac.findFavGenre(userInput)[0] + " movies"
+            comparableList.append(a)
+            userInput = input("Please enter user id 2\n")
+            b = "User: " + userInput + " likes " + sparkprac.findFavGenre(userInput)[0] + " movies"
+            comparableList.append(b)
+            for i in comparableList:
+                print(i)
         elif(userInput == "10"):
             print("Thank you for using our program, see you next time!")
             exit()
