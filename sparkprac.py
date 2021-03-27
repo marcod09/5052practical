@@ -48,11 +48,12 @@ def searchMovieByTitle(movieTitle):
 def searchMovieById(movieID):
     #show number of users that have watched that movie
     noMovieWatched = ratings.groupBy("movieId").agg(count("userId"))
-    specificMovieWatched = noMovieWatched.movieId.contains(movieID)
+    noMovieWatchedFilter = noMovieWatched.filter(noMovieWatched.movieId == 1)
     #show average rating of movies
     avgRatingMovies = ratings.groupBy("movieId").agg(avg("rating"))
-    specificMovieRating = avgRatingMovies.movieId.contains(movieID)
-    return specificMovieRating
+    MovieRatingFilter = avgRatingMovies.filter(noMovieWatched.movieId == 1)
+    combined = noMovieWatchedFilter.alias('a').join(MovieRatingFilter.alias('b'), noMovieWatchedFilter.movieId == MovieRatingFilter.movieId).select("a.movieId", "a.count(userId)","b.avg(rating)")
+    return combined.show()
 
 
 #returns list of movies by user inputed genre... limit it temp
