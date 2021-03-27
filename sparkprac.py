@@ -40,9 +40,18 @@ def searchUserListMovies(userList):
 #Search movie by title, show the average rating, the number of users that have
 #watched the movie
 def searchMovieByTitle(movieTitle):
-    #join tables together
-    combined = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId).select("title", "a.movieId", "userId", "rating").limit(5).collect()
-    return combined
+    #search movie by title
+    searchTitle = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId).select("a.movieId", "a.title")
+    #show number of users that have watched that movie
+    noMovieWatched = ratings.groupBy("movieId").agg(count("userId"))
+    noMovieWatchedFilter = noMovieWatched.filter(noMovieWatched.movieId == 1)
+    #show average rating of movies
+    avgRatingMovies = ratings.groupBy("movieId").agg(avg("rating"))
+    MovieRatingFilter = avgRatingMovies.filter(noMovieWatched.movieId == 1)
+    combined = noMovieWatchedFilter.alias('a').join(MovieRatingFilter.alias('b'), noMovieWatchedFilter.movieId == MovieRatingFilter.movieId).select("a.movieId", "a.count(userId)","b.avg(rating)")
+    #combine with title
+    combinedTitle = combined.alias('a').join(searchTitle.alias('b'), combined.movieId == searchTitle.movieId).select("b.title", "a.count(userId)","a.avg(rating)").limit(1)
+    return combinedTitle.show()
     
 #Search movie by id, show the average rating, the number of users that have watched the movie
 def searchMovieById(movieID):
