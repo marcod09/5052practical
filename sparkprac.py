@@ -57,10 +57,10 @@ def searchMovieByTitle(movieTitle):
 def searchMovieById(movieID):
     #show number of users that have watched that movie
     noMovieWatched = ratings.groupBy("movieId").agg(count("userId"))
-    noMovieWatchedFilter = noMovieWatched.filter(noMovieWatched.movieId == 1)
+    noMovieWatchedFilter = noMovieWatched.filter(noMovieWatched.movieId == movieID)
     #show average rating of movies
     avgRatingMovies = ratings.groupBy("movieId").agg(avg("rating"))
-    MovieRatingFilter = avgRatingMovies.filter(noMovieWatched.movieId == 1)
+    MovieRatingFilter = avgRatingMovies.filter(noMovieWatched.movieId == movieID)
     combined = noMovieWatchedFilter.alias('a').join(MovieRatingFilter.alias('b'), noMovieWatchedFilter.movieId == MovieRatingFilter.movieId).select("a.movieId", "a.count(userId)","b.avg(rating)")
     return combined.show()
 
