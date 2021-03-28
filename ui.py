@@ -14,11 +14,13 @@ def printMenu():
     print("8. Find the favourite genre of a given user")
     print("9. Compare...")
     print("10. To exit the program")
+    print("Enter show menu to see the menu again")
     
 
 def main():
+    printMenu()
     while (True):
-        printMenu()
+        # printMenu()
         userInput = input("Enter a number from 1-9 that matches the option you want to explore in the menu shown above\n")
 
         if(userInput == "1"):
@@ -28,16 +30,16 @@ def main():
             userInput = input("Please enter a list of user IDs (comma separated)")
             userList = userInput.split(",")
             print(sparkprac.searchUserListMovies(userList))
-        elif(userInput == "3"): #needs to be fixed once marco has it done
+        elif(userInput == "3"):
             print("Enter 1 if you're searching by movie ID")
             print("Enter 2 if you're searching by Title")
             userInput = input("Enter 1 or 2\n")
             if(userInput == "1"):
-                print("sdfsdf")
-                print(sparkprac.searchMovieById(1))
+                userInput = input("Please enter movie ID\n")
+                print(sparkprac.searchMovieById(userInput))
             elif(userInput == "2"):
-                print("sasdasd")
-                print(sparkprac.searchMovieByTitle("Wolf"))
+                userInput = input("please enter movie Title\n")
+                print(sparkprac.searchMovieByTitle(userInput))
         elif(userInput == "4"):
             print("Enter 1 if you're inputting a genre")
             print("Enter 2 if you're inputting a list of genres")
@@ -71,6 +73,8 @@ def main():
             comparableList.append(b)
             for i in comparableList:
                 print(i)
+        elif(userInput == "show menu"):
+            printMenu()
         elif(userInput == "10"):
             print("Thank you for using our program, see you next time!")
             exit()
