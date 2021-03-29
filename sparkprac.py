@@ -97,7 +97,7 @@ def nTopMovieRating(n):
 #returning top n movies watched
 def nTopMovieWatches(n):
      moviesDF = (ratings.groupBy('movieId').count()).orderBy(desc('count')).limit(n)
-     return movies.join(moviesDF, movies.movieId == moviesDF.movieId).select('title').show(1000, truncate = False)
+     return movies.join(moviesDF, movies.movieId == moviesDF.movieId).select('title', 'count').orderBy(desc('count')).show(1000, truncate = False)
 
 #=======Part 2 Methods========
 #returns a pandas series with result of favourite genre for a given user
