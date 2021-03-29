@@ -29,7 +29,7 @@ def searchUserId(userId):
     noMovieWatched = ratings.groupBy("userId").agg(count("movieId"))
     noGenreWatched = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId).withColumn("genre",explode(split("genres","\|"))).drop("genres").groupBy("userId").agg(countDistinct("genre"))
     combined = noMovieWatched.alias('a').join(noGenreWatched.alias('b'), noMovieWatched.userId == noGenreWatched.userId).select("a.userId", "a.count(movieId)","b.count(genre)")
-    return combined.filter(combined.userId.contains(userId)).show(1000, truncate = False)
+    return combined.filter(combined.userId == userId).show(1000, truncate = False)
 
 #returns list of movies + genre of movie for each user in a userlist
 def searchUserListMovies(userList):
