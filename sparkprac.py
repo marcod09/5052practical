@@ -72,11 +72,11 @@ def searchMovieById(movieID):
 
 #returns list of movies by user inputed genre... limit it temp
 def searchMovieByGenre(genre, limit):
-    return movies.filter(movies.title.contains(genre)).limit(limit).show(1000, truncate = False)
+    return movies.filter(movies.genres.contains(genre)).limit(limit).show(1000, truncate = False)
 
 #this is just for the method below
 def searchMovieByGenre2(genre, limit):
-    return movies.filter(movies.title.contains(genre)).limit(limit).collect()
+    return movies.filter(movies.genres.contains(genre)).limit(limit).collect()
 
 #Given a list of genres, search all movies belonging to each genre
 def searchByMovieGenreList(genreList, limit):
