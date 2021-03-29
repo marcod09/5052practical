@@ -27,7 +27,7 @@ def main():
             userInput = input("Please enter the user ID you want to search\n")
             print(sparkprac.searchUserId(userInput))
         elif(userInput == "2"):
-            userInput = input("Please enter a list of user IDs (comma separated)")
+            userInput = input("Please enter a list of user IDs (comma separated)\n")
             userList = userInput.split(",")
             print(sparkprac.searchUserListMovies(userList))
         elif(userInput == "3"):

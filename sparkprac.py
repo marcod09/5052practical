@@ -2,8 +2,8 @@ import pyspark.sql.dataframe
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, count, avg, split, explode, first, max, desc, asc, countDistinct, struct
 
-moviesPath = "../practical/ml-latest-small/movies.csv"
-ratingsPath = "../practical/ml-latest-small/ratings.csv"
+moviesPath = "../5052practical/ml-latest-small/movies.csv"
+ratingsPath = "../5052practical/ml-latest-small/ratings.csv"
 
 #starting spark session
 spark = SparkSession.builder.master("local").appName("movie_Practical") \
@@ -29,7 +29,7 @@ def searchUserId(userId):
     noMovieWatched = ratings.groupBy("userId").agg(count("movieId"))
     noGenreWatched = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId).withColumn("genre",explode(split("genres","\|"))).drop("genres").groupBy("userId").agg(countDistinct("genre"))
     combined = noMovieWatched.alias('a').join(noGenreWatched.alias('b'), noMovieWatched.userId == noGenreWatched.userId).select("a.userId", "a.count(movieId)","b.count(genre)")
-    return combined.filter(combined.userId.contains(userId)).collect()
+    return combined.filter(combined.userId.contains(userId)).show(1000, truncate = False)
 
 #returns list of movies + genre of movie for each user in a userlist
 def searchUserListMovies(userList):
@@ -56,7 +56,7 @@ def searchMovieByTitle(MovieTitle):
     combined = noMovieWatchedFilter.alias('a').join(MovieRatingFilter.alias('b'), noMovieWatchedFilter.movieId == MovieRatingFilter.movieId).select("a.movieId", "a.count(userId)","b.avg(rating)")
     #combine with title
     combinedTitle = combined.alias('a').join(searchTitle.alias('b'), combined.movieId == searchTitle.movieId).select("b.title", "a.count(userId)","a.avg(rating)").limit(1)
-    return combinedTitle.show()
+    return combinedTitle.show(1000, truncate = False)
     
 #Search movie by id, show the average rating, the number of users that have watched the movie
 def searchMovieById(movieID):
@@ -67,33 +67,37 @@ def searchMovieById(movieID):
     avgRatingMovies = ratings.groupBy("movieId").agg(avg("rating"))
     MovieRatingFilter = avgRatingMovies.filter(noMovieWatched.movieId == movieID)
     combined = noMovieWatchedFilter.alias('a').join(MovieRatingFilter.alias('b'), noMovieWatchedFilter.movieId == MovieRatingFilter.movieId).select("a.movieId", "a.count(userId)","b.avg(rating)")
-    return combined.show()
+    return combined.show(1000, truncate = False)
 
 
 #returns list of movies by user inputed genre... limit it temp
 def searchMovieByGenre(genre, limit):
+    return movies.filter(movies.title.contains(genre)).limit(limit).show(1000, truncate = False)
+
+#this is just for the method below
+def searchMovieByGenre2(genre, limit):
     return movies.filter(movies.title.contains(genre)).limit(limit).collect()
 
 #Given a list of genres, search all movies belonging to each genre
 def searchByMovieGenreList(genreList, limit):
     length = len(genreList)
     for i in range(length):
-        for x in searchMovieByGenre(genreList[i], limit):
+        for x in searchMovieByGenre2(genreList[i], limit):
             print(x)
 
 #returns list of movies by user inputed year... limit it temp
 def searchMovieByYear(year, limit):
-    return movies.filter(movies.title.contains(year)).limit(limit).collect()
+    return movies.filter(movies.title.contains(year)).limit(limit).show(1000, truncate = False)
 
 #returning top n movies by rating in descending order
 def nTopMovieRating(n):
     averageRatings = ratings.groupBy("movieId").agg(avg("rating"))
-    return movies.join(averageRatings, movies.movieId == averageRatings.movieId).select("avg(rating)", "title").orderBy(col("avg(rating)").desc()).limit(n).collect()
+    return movies.join(averageRatings, movies.movieId == averageRatings.movieId).select("avg(rating)", "title").orderBy(col("avg(rating)").desc()).limit(n).show(1000, truncate = False)
 
 #returning top n movies watched
 def nTopMovieWatches(n):
      moviesDF = (ratings.groupBy('movieId').count()).orderBy(desc('count')).limit(n)
-     return movies.join(moviesDF, movies.movieId == moviesDF.movieId).select('title').collect()
+     return movies.join(moviesDF, movies.movieId == moviesDF.movieId).select('title').show(1000, truncate = False)
 
 #=======Part 2 Methods========
 #returns a pandas series with result of favourite genre for a given user
@@ -120,7 +124,7 @@ def findFavGenre(userId):
 # for x in searchMovieByGenre("Comedy", 10):
 #     print(x)
     
-# #printing Given a list of genres, search all movies belonging to each genre
+#printing Given a list of genres, search all movies belonging to each genre
 # print("--printing Given a list of genres, search all movies belonging to each genre--")
 # genreList = ['Horror', 'Comedy']
 # searchByMovieGenreList(genreList, 10)
