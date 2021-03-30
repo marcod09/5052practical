@@ -41,10 +41,10 @@ def searchUserListMovies(userList):
 #watched the movie
 def searchMovieByTitle(MovieTitle):
     #search movie by title
-    searchTitle = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId).select("a.movieId", "a.title")
-    filterSearchTitle = searchTitle.filter(searchTitle.title.contains(MovieTitle)).limit(1)
-    searchMovieID =  filterSearchTitle.select("movieId")
-    val = searchMovieID.first().__getitem__("movieId")
+    searchTitle = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId).select("a.movieId", "a.title") #join movies and ratings
+    filterSearchTitle = searchTitle.filter(searchTitle.title.contains(MovieTitle)).limit(1) #get the first title
+    searchMovieID =  filterSearchTitle.select("movieId") #select it's movieID
+    val = searchMovieID.first().__getitem__("movieId") #extract movieID
     #show number of users that have watched that movie
     noMovieWatched = ratings.groupBy("movieId").agg(count("userId"))
     noMovieWatchedFilter = noMovieWatched.filter(noMovieWatched.movieId == val)
