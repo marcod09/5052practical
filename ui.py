@@ -12,7 +12,7 @@ def printMenu():
     print("6. List the Top n movies with highest rating, ordered by rating")
     print("7. List the Top n movies with the highest number of watches, ordered by number of watches")
     print("8. Find the favourite genre of a given user")
-    print("9. Compare...")
+    print("9. Compare movie taste of two users")
     print("10. To exit the program")
     print("Enter show menu to see the menu again")
     
