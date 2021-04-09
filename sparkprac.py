@@ -32,10 +32,10 @@ def searchUserId(userId):
     return combined.filter(combined.userId == userId).show(1000, truncate = False)
 
 #returns list of movies + genre of movie for each user in a userlist
-def searchUserListMovies(userList):
+def searchUserListMovies(userList, limit):
     combinedTable = movies.alias('a').join(ratings.alias('b'), movies.movieId == ratings.movieId)
     for x in userList:
-        print(combinedTable.filter(combinedTable.userId == x).select("b.userId", "title", "genres").show(1000, truncate = False))
+        print(combinedTable.filter(combinedTable.userId == x).select("b.userId", "title", "genres").limit(limit).show(1000, truncate = False))
 
 #Search movie by title, show the average rating, the number of users that have
 #watched the movie
