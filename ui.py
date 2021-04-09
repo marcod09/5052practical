@@ -54,7 +54,7 @@ def main():
             userInput = input("Please enter the year you want to search by\n")
             print(sparkprac.searchMovieByYear(userInput, 10))
         elif(userInput == "6"):
-            userInput = input("Please enter number of Top N moves you want returned\n")
+            userInput = input("Please enter number of Top N movies you want returned\n")
             print(sparkprac.nTopMovieRating(int(userInput)))
         elif(userInput == "7"):
             userInput = input("Please enter number of Top movies watched you want returned\n")
