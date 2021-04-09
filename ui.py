@@ -20,7 +20,6 @@ def printMenu():
 def main():
     printMenu()
     while (True):
-        # printMenu()
         userInput = input("Enter a number from 1-9 that matches the option you want to explore in the menu shown above\n")
 
         if(userInput == "1"):
@@ -46,14 +45,14 @@ def main():
             userInput = input("Enter 1 or 2\n")
             if(userInput == "1"):
                 userInput = input("Enter a genre\n")
-                print(sparkprac.searchMovieByGenre(userInput, 5)) #limit is temp
-            elif(userInput == "2"):   #might want to consider returning distinct movies
+                print(sparkprac.searchMovieByGenre(userInput, 10))
+            elif(userInput == "2"):
                 userInput = input("Enter comma separated list of genres\n")
                 genreList = userInput.split(",")
-                print(sparkprac.searchByMovieGenreList(genreList, 5)) #limit is temp
+                print(sparkprac.searchByMovieGenreList(genreList, 5)) 
         elif(userInput == "5"):
             userInput = input("Please enter the year you want to search by\n")
-            print(sparkprac.searchMovieByYear(userInput, 5)) #limit is temp
+            print(sparkprac.searchMovieByYear(userInput, 10))
         elif(userInput == "6"):
             userInput = input("Please enter number of Top N moves you want returned\n")
             print(sparkprac.nTopMovieRating(int(userInput)))
